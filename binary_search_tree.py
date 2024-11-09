@@ -1,9 +1,37 @@
+# 11 08 2024
+
 class Node:
     def __init__(self, key, value=None):
         self.key = key
         self.value = value
         self.left = None
         self.right = None
+
+
+# Traversal methods (recursive)                                                                                         ##
+def inorder_traversal(node: Node):  # O(N)
+    """For BST, returns nodes in non-decreasing order. This is the order used to evaluate arithmetic expression trees."""
+    if node is None:
+        return []
+    else:
+        return inorder_traversal(node.left) + [node] + inorder_traversal(node.right)
+
+
+def preorder_traversal(node: Node):  # O(N)
+    """For BST returns the root, the left subtree, and the right subtree."""
+    if node is None:
+        return []
+    else:
+        return [node] + preorder_traversal(node.left) + preorder_traversal(node.right)
+
+
+def postorder_traversal(node: Node):  # O(N)
+    """For BST returns the left subtree, right subtree, and the root, starting from the left-most leaf."""
+    if node is None:
+        return []
+    else:
+        return postorder_traversal(node.left) + postorder_traversal(node.right) + [node]
+#                                                                                                                       ##
 
 class BinarySearchTree:
     # Constructor just assigns an empty root.
@@ -87,7 +115,7 @@ class BinarySearchTree:
                     else:
                         parent.right = current_node.left
                     return  # Node found and removed
-                elif current_node.left is None and current_node.right is not None:  # Case 2
+                elif current_node.left is None and current_node.right is not None:  # Case 3
                     if parent is None: # Node is root
                         self.root = current_node.right
                     elif parent.left is current_node:
@@ -95,15 +123,18 @@ class BinarySearchTree:
                     else:
                         parent.right = current_node.right
                     return  # Node found and removed
-                else:                                    # Case 3
-                    # Find successor (leftmost child of right subtree)
+                else:                                    # Case 4
+                    # Find inorder successor (leftmost child of right subtree)
                     successor = current_node.right
                     while successor.left is not None:
                         successor = successor.left
-                    current_node.key = successor.key      # Copy successor to current node
+                    current_node.key = successor.key      # Copy successor key and value to current node
+                    #
+                    current_node.value = successor.value  ## added this line
+                    #
                     parent = current_node
                     current_node = current_node.right     # Remove successor from right subtree
-                    key = parent.key                      # Loop continues with new key
+                    key = parent.key                      # Loop continues with new key (line 98)
             elif current_node.key < key: # Search right
                 parent = current_node
                 current_node = current_node.right
@@ -112,3 +143,4 @@ class BinarySearchTree:
                 current_node = current_node.left
                 
         return # Node not found
+
